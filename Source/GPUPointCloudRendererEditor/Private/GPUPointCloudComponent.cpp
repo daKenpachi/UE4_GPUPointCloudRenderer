@@ -5,7 +5,7 @@
 * Written by Valentin Kraft <valentin.kraft@online.de>, http://www.valentinkraft.de, February 2018
 **************************************************************************************************/
 
-#include "PointCloudComponent.h"
+#include "GPUPointCloudComponent.h"
 #include "EngineGlobals.h"
 #include "PrimitiveViewRelevance.h"
 #include "RenderResource.h"
@@ -108,7 +108,7 @@ class FPointCloudSceneProxy : public FPrimitiveSceneProxy
 {
 public:
 
-	FPointCloudSceneProxy(UPointCloudComponent* Component)
+	FPointCloudSceneProxy(UGPUPointCloudComponent* Component)
 		: FPrimitiveSceneProxy(Component)
 		, Material(NULL)
 		, DynamicData(NULL)
@@ -362,14 +362,14 @@ private:
 	float PointCloudWidth;
 	float triangleSize;
 
-	UPointCloudComponent* mComponent;
+	UGPUPointCloudComponent* mComponent;
 };
 
 
 
 //////////////////////////////////////////////////////////////////////////
 
-UPointCloudComponent::UPointCloudComponent(const FObjectInitializer& ObjectInitializer)
+UGPUPointCloudComponent::UGPUPointCloudComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
 	PrimaryComponentTick.bCanEverTick = true;
@@ -388,19 +388,19 @@ UPointCloudComponent::UPointCloudComponent(const FObjectInitializer& ObjectIniti
 	SetSimulatePhysics(false);
 }
 
-FPrimitiveSceneProxy* UPointCloudComponent::CreateSceneProxy()
+FPrimitiveSceneProxy* UGPUPointCloudComponent::CreateSceneProxy()
 {
 	auto sceneProxy = new FPointCloudSceneProxy(this);
 	//UE_LOG(LogTemp, Warning, TEXT("created SceneProxy: %d"), sceneProxy);
 	return sceneProxy;
 }
 
-int32 UPointCloudComponent::GetNumMaterials() const
+int32 UGPUPointCloudComponent::GetNumMaterials() const
 {
 	return 1;
 }
 
-void UPointCloudComponent::GetUsedMaterials(TArray<UMaterialInterface*>& OutMaterials, bool bGetDebugMaterials) const
+void UGPUPointCloudComponent::GetUsedMaterials(TArray<UMaterialInterface*>& OutMaterials, bool bGetDebugMaterials) const
 {
 	for (int32 ElementIndex = 0; ElementIndex < GetNumMaterials(); ElementIndex++)
 	{
@@ -411,19 +411,19 @@ void UPointCloudComponent::GetUsedMaterials(TArray<UMaterialInterface*>& OutMate
 	}
 }
 
-void UPointCloudComponent::InitializeComponent()
+void UGPUPointCloudComponent::InitializeComponent()
 {
 	Super::InitializeComponent();
 	//setNumPoints(NumPoints);
 }
 
-void UPointCloudComponent::OnRegister()
+void UGPUPointCloudComponent::OnRegister()
 {
 	Super::OnRegister();
 	setNumPoints(NumPoints);
 }
 
-void UPointCloudComponent::setNumPoints(int numPoints) {
+void UGPUPointCloudComponent::setNumPoints(int numPoints) {
 	NumPoints = numPoints;
 
 	//UE_LOG(LogTemp, Warning, TEXT("mySceneProxy: %d"), SceneProxy);
@@ -441,19 +441,19 @@ void UPointCloudComponent::setNumPoints(int numPoints) {
 }
 
 
-void UPointCloudComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
+void UGPUPointCloudComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction *ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 };
 
-void UPointCloudComponent::CreateRenderState_Concurrent()
+void UGPUPointCloudComponent::CreateRenderState_Concurrent()
 {
 	Super::CreateRenderState_Concurrent();
 
 	SendRenderDynamicData_Concurrent();
 }
 
-void UPointCloudComponent::SendRenderDynamicData_Concurrent()
+void UGPUPointCloudComponent::SendRenderDynamicData_Concurrent()
 {
 	if (SceneProxy)
 	{
@@ -481,7 +481,7 @@ void UPointCloudComponent::SendRenderDynamicData_Concurrent()
 	}
 }
 
-FBoxSphereBounds UPointCloudComponent::CalcBounds(const FTransform& LocalToWorld) const
+FBoxSphereBounds UGPUPointCloudComponent::CalcBounds(const FTransform& LocalToWorld) const
 {
 	//#ToDo
 

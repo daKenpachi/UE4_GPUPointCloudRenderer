@@ -21,7 +21,7 @@ public:
 	~UGPUPointCloudRendererComponent();
 
 	UPROPERTY()
-	class UPointCloudComponent* BaseMesh;
+	class UGPUPointCloudComponent* BaseMesh;
 
 	/**
 	* For dynamic point clouds only. When you want to change properties, then you'll have to call this function (during Run-Time or in construction script). Sets the given point cloud properties and updates the point cloud. Can be called every frame.
@@ -91,7 +91,7 @@ public:
 	void AddSnapshot(UPARAM(ref) TArray<FLinearColor> &pointPositions, UPARAM(ref) TArray<uint8> &pointColors, FVector offsetTranslation = FVector::ZeroVector, FRotator offsetRotation = FRotator::ZeroRotator);
 
 private:
-	class FPointCloudStreamingCore* mPointCloudCore = nullptr;
+	class FGPUPointCloudStreamingCore* mPointCloudCore = nullptr;
 
 	UPROPERTY(VisibleAnywhere, Category = "GPUPointCloudRenderer")
 	int32 mPointCount = 0;

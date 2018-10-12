@@ -4,8 +4,8 @@
 
 #include "GPUPointCloudRendererComponent.h"
 #include "IGPUPointCloudRenderer.h"
-#include "PointCloudStreamingCore.h"
-#include "PointCloudComponent.h"
+#include "GPUPointCloudStreamingCore.h"
+#include "GPUPointCloudComponent.h"
 #include "ConstructorHelpers.h"
 
 
@@ -176,7 +176,7 @@ void UGPUPointCloudRendererComponent::CreateStreamingBaseMesh(int32 pointCount)
 		return;
 
 	// Create base mesh
-	BaseMesh = NewObject<UPointCloudComponent>(this, FName("PointCloud Mesh"));
+	BaseMesh = NewObject<UGPUPointCloudComponent>(this, FName("PointCloud Mesh"));
 	BaseMesh->NumPoints = pointCount;
 	BaseMesh->triangleSize = 1.0f;	// splat size is set in the shader
 	BaseMesh->RegisterComponent();

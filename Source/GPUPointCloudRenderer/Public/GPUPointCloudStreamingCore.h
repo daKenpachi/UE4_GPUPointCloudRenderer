@@ -11,11 +11,11 @@
 
 DECLARE_STATS_GROUP(TEXT("GPUPointCloudRenderer"), STATGROUP_GPUPCR, STATCAT_Advanced);
 
-class GPUPOINTCLOUDRENDERER_API FPointCloudStreamingCore
+class GPUPOINTCLOUDRENDERER_API FGPUPointCloudStreamingCore
 {
 public:
-	FPointCloudStreamingCore(UMaterialInstanceDynamic* pointCloudShaderDynInstance = nullptr) { mDynamicMatInstance = pointCloudShaderDynInstance; };
-	~FPointCloudStreamingCore();
+	FGPUPointCloudStreamingCore(UMaterialInstanceDynamic* pointCloudShaderDynInstance = nullptr) { mDynamicMatInstance = pointCloudShaderDynInstance; };
+	~FGPUPointCloudStreamingCore();
 	//virtual unsigned int GetInstanceId() const { return _instanceId; };
 	unsigned int GetPointCount() { return mPointCount; };
 

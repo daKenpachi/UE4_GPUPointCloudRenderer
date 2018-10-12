@@ -42,7 +42,7 @@ public:
 	/**
 	* Returns a instance of the Point Cloud Streaming Core class.
 	*/
-	virtual FPointCloudStreamingCore* CreateStreamingInstance(UMaterialInstanceDynamic* pointCloudShaderDynInstance = nullptr) = 0;
+	virtual FGPUPointCloudStreamingCore* CreateStreamingInstance(UMaterialInstanceDynamic* pointCloudShaderDynInstance = nullptr) = 0;
 
 };
 

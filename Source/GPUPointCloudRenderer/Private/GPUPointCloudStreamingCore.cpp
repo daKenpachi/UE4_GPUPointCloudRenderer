@@ -3,7 +3,7 @@
 **************************************************************************************************/
 
 #include "CoreMinimal.h"
-#include "PointCloudStreamingCore.h"
+#include "GPUPointCloudStreamingCore.h"
 #include "Engine/TextureRenderTarget2D.h"
 #include "Engine/World.h"
 #include "App.h"
@@ -25,7 +25,7 @@ DECLARE_CYCLE_STAT(TEXT("Update Shader Textures"), STAT_UpdateShaderTextures, ST
 // MAIN FUNCTIONS ////
 //////////////////////
 
-void FPointCloudStreamingCore::AddSnapshot(TArray<FLinearColor> &pointPositions, TArray<uint8> &pointColors, FVector offsetTranslation, FRotator offsetRotation) {
+void FGPUPointCloudStreamingCore::AddSnapshot(TArray<FLinearColor> &pointPositions, TArray<uint8> &pointColors, FVector offsetTranslation, FRotator offsetRotation) {
 
 	check(pointPositions.Num() * 4 == pointColors.Num());
 
@@ -69,7 +69,7 @@ void FPointCloudStreamingCore::AddSnapshot(TArray<FLinearColor> &pointPositions,
 	mDeltaTime = 0.f;
 }
 
-void FPointCloudStreamingCore::SetInput(TArray<FLinearColor> &pointPositions, TArray<uint8> &pointColors, bool sortData) {
+void FGPUPointCloudStreamingCore::SetInput(TArray<FLinearColor> &pointPositions, TArray<uint8> &pointColors, bool sortData) {
 
 	check(pointPositions.Num() * 4 == pointColors.Num());
 
@@ -86,7 +86,7 @@ void FPointCloudStreamingCore::SetInput(TArray<FLinearColor> &pointPositions, TA
 	UpdateTextureBuffer();
 }
 
-void FPointCloudStreamingCore::SetInput(TArray<FLinearColor> &pointPositions, TArray<FColor> &pointColors, bool sortData) {
+void FGPUPointCloudStreamingCore::SetInput(TArray<FLinearColor> &pointPositions, TArray<FColor> &pointColors, bool sortData) {
 
 	ensure(pointPositions.Num() == pointColors.Num());
 
@@ -107,7 +107,7 @@ void FPointCloudStreamingCore::SetInput(TArray<FLinearColor> &pointPositions, TA
 	UpdateTextureBuffer();
 }
 
-void FPointCloudStreamingCore::SetInput(TArray<FVector> &pointPositions, TArray<FColor> &pointColors, bool sortData) {
+void FGPUPointCloudStreamingCore::SetInput(TArray<FVector> &pointPositions, TArray<FColor> &pointColors, bool sortData) {
 
 	ensure(pointPositions.Num() == pointColors.Num());
 
@@ -136,7 +136,7 @@ void FPointCloudStreamingCore::SetInput(TArray<FVector> &pointPositions, TArray<
 	UpdateTextureBuffer();
 }
 
-void FPointCloudStreamingCore::InitColorBuffer()
+void FGPUPointCloudStreamingCore::InitColorBuffer()
 {
 	if (mColorData.Num() != mPointCount * 4) {
 		mColorData.Empty();
@@ -145,7 +145,7 @@ void FPointCloudStreamingCore::InitColorBuffer()
 	}
 }
 
-void FPointCloudStreamingCore::InitPointPosBuffer()
+void FGPUPointCloudStreamingCore::InitPointPosBuffer()
 {
 	if (mPointPosData.Num() != mPointCount) {
 		mPointPosData.Empty();
@@ -154,13 +154,13 @@ void FPointCloudStreamingCore::InitPointPosBuffer()
 	}
 }
 
-void FPointCloudStreamingCore::SortPointCloudData() {
+void FGPUPointCloudStreamingCore::SortPointCloudData() {
 
 	SCOPE_CYCLE_COUNTER(STAT_SortPointCloudData);
 
 }
 
-void FPointCloudStreamingCore::Initialize(unsigned int pointCount)
+void FGPUPointCloudStreamingCore::Initialize(unsigned int pointCount)
 {
 	if (pointCount == 0)
 		return;
@@ -218,7 +218,7 @@ void FPointCloudStreamingCore::Initialize(unsigned int pointCount)
 	mGlobalStreamCounter = 0;
 }
 
-void FPointCloudStreamingCore::UpdateTextureBuffer()
+void FGPUPointCloudStreamingCore::UpdateTextureBuffer()
 {
 	SCOPE_CYCLE_COUNTER(STAT_UpdateTextureRegions);
 
@@ -242,7 +242,7 @@ void FPointCloudStreamingCore::UpdateTextureBuffer()
 	mColorTexture->WaitForStreaming();
 }
 
-void FPointCloudStreamingCore::UpdateShaderParameter()
+void FGPUPointCloudStreamingCore::UpdateShaderParameter()
 {
 	SCOPE_CYCLE_COUNTER(STAT_UpdateShaderTextures);
 
@@ -260,7 +260,7 @@ void FPointCloudStreamingCore::UpdateShaderParameter()
 	mDynamicMatInstance->SetVectorParameterValue("maxExtent", mExtent.Max);
 }
 
-unsigned int FPointCloudStreamingCore::GetUpperPowerOfTwo(unsigned int v)
+unsigned int FGPUPointCloudStreamingCore::GetUpperPowerOfTwo(unsigned int v)
 {
 	v--;
 	v |= v >> 1;
@@ -272,7 +272,7 @@ unsigned int FPointCloudStreamingCore::GetUpperPowerOfTwo(unsigned int v)
 	return v;
 }
 
-void FPointCloudStreamingCore::FreeData()
+void FGPUPointCloudStreamingCore::FreeData()
 {
 	mGlobalStreamCounter = 0;
 	mPointPosData.Empty();
@@ -283,7 +283,7 @@ void FPointCloudStreamingCore::FreeData()
 	if (mUpdateTextureRegion) delete mUpdateTextureRegion; mUpdateTextureRegion = nullptr;
 }
 
-FPointCloudStreamingCore::~FPointCloudStreamingCore() {
+FGPUPointCloudStreamingCore::~FGPUPointCloudStreamingCore() {
 
 	FreeData();
 

@@ -111,8 +111,13 @@ void UGPUPointCloudRendererComponent::SetInputAndConvert2(TArray<FVector> &point
 	
 	CHECK_PCR_STATUS
 
-	if (pointPositions.Num() != pointColors.Num())
+	if (pointPositions.Num() != pointColors.Num()){
+
 		UE_LOG(GPUPointCloudRenderer, Warning, TEXT("The number of point positions doesn't match the number of point colors."));
+		int minNum = FMath::Min(pointColors.Num(), pointPositions.Num());
+		pointColors.SetNum(minNum);
+		pointPositions.SetNum(minNum);
+	}
 	if (pointPositions.Num() == 0 || pointColors.Num() == 0) {
 		UE_LOG(GPUPointCloudRenderer, Error, TEXT("Empty point position and/or color data."));
 		return;
